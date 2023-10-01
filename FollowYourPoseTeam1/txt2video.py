@@ -161,19 +161,65 @@ def main(
         ddim_inv_latent = None
 
         from datetime import datetime
-   
+        import cv2
         now = str(datetime.now())
-        # print(now)
+        
         for idx, prompt in enumerate(validation_data.prompts):
             sample = validation_pipeline(prompt, generator=generator, latents=ddim_inv_latent,
                                         skeleton_path=skeleton_path,
                                         **validation_data).videos
-            save_videos_grid(sample, f"{output_dir}/inference/sample-{global_step}-{str(seed)}-{now}/{prompt}.gif")
-            samples.append(sample)
-        samples = torch.concat(samples)
-        save_path = f"{output_dir}/inference/sample-{global_step}-{str(seed)}-{now}.gif"
-        save_videos_grid(samples, save_path)
-        logger.info(f"Saved samples to {save_path}")
+            save_videos_grid(sample, f"{output_dir}/inference/sample-{global_step}-{str(seed)}-{now}/{prompt}.mp4")
+
+            # # Specify the paths for input and output videos
+            input_video_path = f"{output_dir}/inference/sample-{global_step}-{str(seed)}-{now}/{prompt}.mp4"
+            output_video_path = f"{output_dir}/inference/sample-{global_step}-{str(seed)}-{now}/{prompt}_with_captions.mp4"
+
+            # Open the input video file using OpenCV
+            cap = cv2.VideoCapture(input_video_path)
+            if not cap.isOpened():
+                print(f'Failed to open the video file: {input_video_path}')
+            else:
+                print(f'Video loaded successfully: {input_video_path}')
+
+            # Get video properties (width, height, and frames per second)
+            frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            fps = int(cap.get(cv2.CAP_PROP_FPS))
+
+            # Create a VideoWriter object for the output video with captions
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            out = cv2.VideoWriter(output_video_path, fourcc, fps, (frame_width, frame_height))
+
+            # Define the font and text settings for the caption
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            font_scale = 1
+            font_color = (0, 0, 0)
+            font_thickness = 2
+
+            # Process and add captions to each frame of the video
+            while True:
+                ret, frame = cap.read()
+                if not ret:
+                    break
+
+                text_size = cv2.getTextSize(prompt, font, font_scale, font_thickness)[0]
+                # Calculate the position of the caption (bottom center)
+                text_x = (frame_width - text_size[0]) // 2
+                text_y = frame_height - 20  # Adjust the Y-coordinate for positioning
+
+                # Add the caption to the frame
+                cv2.putText(frame, prompt, (text_x, text_y), font, font_scale, font_color, font_thickness)
+
+                # Write the frame with caption to the output video
+                out.write(frame)
+
+            # Release resources
+            cap.release()
+            out.release()
+
+            print(f'Video with caption saved as "{output_video_path}"')
+
+            os.remove(input_video_path)
 
 
 
