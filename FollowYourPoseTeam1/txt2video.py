@@ -219,7 +219,7 @@ def main(
 
             print(f'Video with caption saved as "{output_video_path}"')
 
-            os.remove(input_video_path)
+            #os.remove(input_video_path)
 
 
 
