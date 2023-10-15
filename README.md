@@ -24,7 +24,7 @@
 ### This section covers the steps to create the model used by the inference section to create the output video
 - Initailize the config / model by inputting the details of configurations
 - Run the cells until "Choose a video and click Generate to start training process/generate skeleton."
-- Ensure that your runtime restarts by pressing (Ctrl  M) before excuting the cell
+- Ensure that your runtime restarts by pressing (Ctrl  M) before excuting that cell
 - Select the video from the dropdown list and generate the skeleton video
 
 ## Inference Section
