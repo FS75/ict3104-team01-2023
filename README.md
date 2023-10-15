@@ -2,7 +2,7 @@
 
 ## Setting up python notebook
 - Go to google colab notebook.
-- Under Github tab, check "Includ private repos"
+- Under Github tab, check "Include private repos"
 - key in the repository link. Eg: "https://github.com/FS75/ict3104-team01-2023" and select the "Main" Branch
 - Choose `project.ipynb` and open it in new tab
 - Run each cell accordingly and follow the instructions on the notebook
@@ -21,7 +21,7 @@
 ### This section covers the steps to create the model used by the inference section to create the output video
 - Initailize the config / model by inputting the details of configurations
 - Run the cells until "Choose a video and click Generate to start training process/generate skeleton."
-- Ensure that your runtime restarts by pressing (ctrl  M) before excuting the cell
+- Ensure that your runtime restarts by pressing (Ctrl  M) before excuting the cell
 - Select the video from the dropdown list and generate the skeleton video
 
 ## Inference Section
