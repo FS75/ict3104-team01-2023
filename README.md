@@ -9,9 +9,9 @@
 
 
 ## Note
-Original video: Videos downloaded from Charades project
-Skeleton: The output created by the cells to be used in the output video
-Output Video: The final results based on user prompts, selected original videos
+- Original video: Videos downloaded from Charades project
+- Skeleton: The output created by the cells to be used in the output video
+- Output Video: The final results based on user prompts, selected original videos
 
 ## Data Exploration section
 ### This contains the lists of videos imported from the Charades project to be used for the model training 
