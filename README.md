@@ -8,7 +8,7 @@
 - Run each cell accordingly and follow the instructions on the notebook
 
 
-##Note
+## Note
 Original video: Videos downloaded from Charades project
 Skeleton: The output created by the cells to be used in the output video
 Output Video: The final results based on user prompts, selected original videos
