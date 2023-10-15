@@ -11,7 +11,7 @@
 ## Note
 - Original video: Videos downloaded from Charades project
 - <img width="143" alt="image" src="https://github.com/FS75/ict3104-team01-2023/assets/135947288/fa1037fa-1cca-4305-813a-0507ee677d9a">
-- Skeleton: The output created by the cells to be used in the output video
+- Skeleton: The output created by the cells to be used to generate the output video
 - <img width="119" alt="image" src="https://github.com/FS75/ict3104-team01-2023/assets/135947288/6ed50482-b7ac-4dc6-8542-7baff96b64ff">
 - Output Video: The final results based on user prompts, selected original videos
 - <img width="178" alt="image" src="https://github.com/FS75/ict3104-team01-2023/assets/135947288/812e356d-7d43-48b9-b0ac-7c12aa79efa3">
