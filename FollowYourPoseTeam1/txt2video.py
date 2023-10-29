@@ -164,15 +164,17 @@ def main(
         import cv2
         now = str(datetime.now())
         
+        destination = "/content/GeneratedVideos"
+        
         for idx, prompt in enumerate(validation_data.prompts):
             sample = validation_pipeline(prompt, generator=generator, latents=ddim_inv_latent,
                                         skeleton_path=skeleton_path,
                                         **validation_data).videos
-            save_videos_grid(sample, f"{output_dir}/inference/sample-{global_step}-{str(seed)}-{now}/{prompt}.mp4")
+            save_videos_grid(sample, f"{destination}/{global_step}-{str(seed)}-{now}/{prompt}.mp4")
 
             # # Specify the paths for input and output videos
-            input_video_path = f"{output_dir}/inference/sample-{global_step}-{str(seed)}-{now}/{prompt}.mp4"
-            output_video_path = f"{output_dir}/inference/sample-{global_step}-{str(seed)}-{now}/{prompt}_with_captions.mp4"
+            input_video_path = f"{destination}/{global_step}-{str(seed)}-{now}/{prompt}.mp4"
+            output_video_path = f"{destination}/{global_step}-{str(seed)}-{now}/{prompt}_with_captions.mp4"
 
             # Open the input video file using OpenCV
             cap = cv2.VideoCapture(input_video_path)
@@ -217,10 +219,28 @@ def main(
             cap.release()
             out.release()
 
-            print(f'Video with caption saved as "{output_video_path}"')
+            convert_video_codec(output_video_path, output_video_path)
+
+            # print(f'Video with caption saved as "{output_video_path}"')
 
             #os.remove(input_video_path)
 
+from moviepy.editor import VideoFileClip
+
+def convert_video_codec(input_path, output_path, codec="libx264"):
+    """
+    Convert the video codec of an input video file and save it to an output file.
+
+    Args:
+        input_path (str): Path to the input video file.
+        output_path (str): Path to the output video file.
+        codec (str): The target codec for the output video (default is "libx264").
+    """
+    # Load the input video
+    video_clip = VideoFileClip(input_path)
+
+    # Convert the video codec and save to the output file
+    video_clip.write_videofile(output_path, codec=codec)
 
 
 if __name__ == "__main__":
