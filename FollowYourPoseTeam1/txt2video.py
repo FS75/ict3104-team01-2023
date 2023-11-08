@@ -28,6 +28,7 @@ from followyourpose.data.hdvila import HDVilaDataset
 from followyourpose.pipelines.pipeline_followyourpose import FollowYourPosePipeline
 from followyourpose.util import save_videos_grid, ddim_inversion
 from einops import rearrange
+from moviepy.editor import VideoFileClip
 
 import sys
 sys.path.append('FollowYourPose')
@@ -165,16 +166,21 @@ def main(
         now = str(datetime.now())
         
         destination = "/content/GeneratedVideos"
+
+         # Use os.path.basename to get the filename from the path
+        filename = os.path.basename(args.config)
+        # Use os.path.splitext to split the filename into name and extension
+        configName, extension = os.path.splitext(filename)
         
         for idx, prompt in enumerate(validation_data.prompts):
             sample = validation_pipeline(prompt, generator=generator, latents=ddim_inv_latent,
                                         skeleton_path=skeleton_path,
                                         **validation_data).videos
-            save_videos_grid(sample, f"{destination}/{global_step}-{str(seed)}-{now}/{prompt}.mp4")
+            save_videos_grid(sample, f"{destination}/{configName}-{now}/{prompt}.mp4")
 
             # # Specify the paths for input and output videos
-            input_video_path = f"{destination}/{global_step}-{str(seed)}-{now}/{prompt}.mp4"
-            output_video_path = f"{destination}/{global_step}-{str(seed)}-{now}/{prompt}_with_captions.mp4"
+            input_video_path = f"{destination}/{configName}-{now}/{prompt}.mp4"
+            output_video_path = f"{destination}/{configName}-{now}/{prompt}_with_captions.mp4"
 
             # Open the input video file using OpenCV
             cap = cv2.VideoCapture(input_video_path)
@@ -207,7 +213,7 @@ def main(
                 text_size = cv2.getTextSize(prompt, font, font_scale, font_thickness)[0]
                 # Calculate the position of the caption (bottom center)
                 text_x = (frame_width - text_size[0]) // 2
-                text_y = frame_height - 20  # Adjust the Y-coordinate for positioning
+                text_y = 30  # Adjust the Y-coordinate for positioning
 
                 # Add the caption to the frame
                 cv2.putText(frame, prompt, (text_x, text_y), font, font_scale, font_color, font_thickness)
@@ -219,28 +225,25 @@ def main(
             cap.release()
             out.release()
 
-            convert_video_codec(output_video_path, output_video_path)
+            convert_mp4v_to_h264(output_video_path, output_video_path)
 
-            # print(f'Video with caption saved as "{output_video_path}"')
-
-            #os.remove(input_video_path)
-
-from moviepy.editor import VideoFileClip
-
-def convert_video_codec(input_path, output_path, codec="libx264"):
+#convert mp4v to h264
+def convert_mp4v_to_h264(input_video_path, output_video_path):
     """
-    Convert the video codec of an input video file and save it to an output file.
+    Convert an mp4v video to H.264 format for compatibility with Colab.
 
     Args:
-        input_path (str): Path to the input video file.
-        output_path (str): Path to the output video file.
-        codec (str): The target codec for the output video (default is "libx264").
+        input_video_path (str): Path to the input mp4v video file.
+        output_video_path (str): Path to save the output video in H.264 format.
     """
     # Load the input video
-    video_clip = VideoFileClip(input_path)
+    video_clip = VideoFileClip(input_video_path)
 
-    # Convert the video codec and save to the output file
-    video_clip.write_videofile(output_path, codec=codec)
+    os.remove(input_video_path)
+
+    # Convert the video codec to H.264 and save it to the output file
+    video_clip.write_videofile(output_video_path, codec="libx264")
+
 
 
 if __name__ == "__main__":
